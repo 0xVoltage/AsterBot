@@ -16,7 +16,9 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(gh --version)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(cmdkey:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []
