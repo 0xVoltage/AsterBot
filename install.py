@@ -45,8 +45,14 @@ def install_dependencies():
 
     # Main dependencies
     main_packages = [
-        "requests",
-        "asyncio",
+        "requests>=2.31.0",
+        "websocket-client>=1.6.0",
+        "pandas>=2.0.0",
+        "numpy>=1.24.0",
+        "ta>=0.10.2",
+        "python-dotenv>=1.0.0",
+        "aiohttp>=3.8.0",
+        "asyncio-throttle>=1.0.2",
     ]
 
     # Web interface dependencies
