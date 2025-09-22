@@ -1,0 +1,55 @@
+{
+  "base_url": "https://fapi.asterdex.com",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT"
+  ],
+  "cycle_interval": 0.5,
+  "log_level": "INFO",
+  "multi_symbol_settings": {
+    "max_concurrent_positions": 3,
+    "symbol_rotation_enabled": true,
+    "shared_margin_management": true
+  },
+  "trading_settings": {
+    "risk_per_trade": 5.0,
+    "min_profit_target": 0.8,
+    "max_position_time": 600,
+    "trading_fee": 0.035,
+    "scalping_mode": true,
+    "min_trade_interval": 30,
+    "min_position_size": 0.001,
+    "force_min_order": true,
+    "leverage": 10,
+    "max_margin_per_trade": 40.0
+  },
+  "technical_indicators": {
+    "rsi_period": 14,
+    "sma_short": 5,
+    "sma_long": 10,
+    "rsi_oversold": 30,
+    "rsi_overbought": 70
+  },
+  "risk_management": {
+    "max_daily_loss": 50.0,
+    "max_consecutive_losses": 5,
+    "position_size_multiplier": 1.0,
+    "emergency_stop": false
+  },
+  "monitoring": {
+    "performance_snapshot_interval": 300,
+    "alert_thresholds": {
+      "min_win_rate": 40,
+      "max_drawdown": 20,
+      "min_profit_factor": 1.0
+    }
+  },
+  "api_key": "your_api_key_here",
+  "secret_key": "your_secret_key_here",
+  "take_profit_pct": 0.6,
+  "stop_loss_pct": 1.0
+}

@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsterBot - Trading Bot Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-black: #0f0f0f;
+            --secondary-black: #1a1a1a;
+            --tertiary-black: #2a2a2a;
+            --primary-orange: #ff6b35;
+            --secondary-orange: #ff8c42;
+            --accent-orange: #ffa726;
+            --text-light: #f5f5f5;
+            --text-muted: #b0b0b0;
+            --success-green: #4ade80;
+            --warning-yellow: #fbbf24;
+            --error-red: #ef4444;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 15px 35px rgba(255, 107, 53, 0.3);
+        }
+
+        * {
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--tertiary-black) 100%) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .status-running {
+            background: linear-gradient(135deg, var(--success-green), #22c55e);
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+        }
+
+        .status-stopped {
+            background: linear-gradient(135deg, var(--error-red), #dc2626);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--secondary-black) 0%, var(--tertiary-black) 100%);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            color: white;
+            border-radius: 16px 16px 0 0 !important;
+            border: none;
+            padding: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .form-control, .form-select {
+            background: var(--tertiary-black);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            border-radius: 10px;
+            color: var(--text-light);
+            padding: 12px 16px;
+            font-weight: 400;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--tertiary-black);
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+            color: var(--text-light);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-text {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 12px 24px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, var(--secondary-orange) 0%, var(--accent-orange) 100%);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--success-green) 0%, #22c55e 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, var(--error-red) 0%, #dc2626 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-outline-light {
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            color: var(--primary-orange);
+            background: transparent;
+        }
+
+        .btn-outline-light:hover {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+            color: white;
+        }
+
+        .real-time-card {
+            border-left: 4px solid var(--primary-orange);
+            background: linear-gradient(135deg, var(--secondary-black) 0%, var(--tertiary-black) 100%);
+        }
+
+        .real-time-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .real-time-card h3 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .real-time-card h6 {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+        }
+
+        .text-primary { color: var(--primary-orange) !important; }
+        .text-success { color: var(--success-green) !important; }
+        .text-warning { color: var(--warning-yellow) !important; }
+        .text-danger { color: var(--error-red) !important; }
+        .text-info { color: var(--secondary-orange) !important; }
+
+        .log-container {
+            height: 350px;
+            overflow-y: auto;
+            background: var(--primary-black);
+            color: var(--text-light);
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-orange) var(--tertiary-black);
+        }
+
+        .log-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-container::-webkit-scrollbar-track {
+            background: var(--tertiary-black);
+            border-radius: 4px;
+        }
+
+        .log-container::-webkit-scrollbar-thumb {
+            background: var(--primary-orange);
+            border-radius: 4px;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            padding: 2px 0;
+            font-weight: 400;
+        }
+
+        .log-info {
+            color: var(--secondary-orange);
+            font-weight: 500;
+        }
+        .log-success {
+            color: var(--success-green);
+            font-weight: 500;
+        }
+        .log-warning {
+            color: var(--warning-yellow);
+            font-weight: 500;
+        }
+        .log-error {
+            color: var(--error-red);
+            font-weight: 600;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--secondary-black) 0%, var(--tertiary-black) 100%);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 16px;
+            color: var(--text-light);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 16px 16px 0 0 !important;
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .badge {
+            font-weight: 600;
+            padding: 0.5em 0.75em;
+            border-radius: 8px;
+        }
+
+        .bg-primary { background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange)) !important; }
+        .bg-success { background: linear-gradient(135deg, var(--success-green), #22c55e) !important; }
+        .bg-danger { background: linear-gradient(135deg, var(--error-red), #dc2626) !important; }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.1));
+            border-left: 4px solid var(--warning-yellow);
+            color: var(--text-light);
+        }
+
+        .container-fluid {
+            padding: 0 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 0 1rem;
+            }
+
+            .card {
+                border-radius: 12px;
+            }
+
+            .real-time-card h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(255, 107, 53, 0.2);
+            border-top: 3px solid var(--primary-orange);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-robot"></i> AsterBot - Trading Interface
+            </span>
+            <div class="d-flex align-items-center">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="statusText" class="text-light">Stopped</span>
+                <button class="btn btn-outline-light btn-sm ms-3" data-bs-toggle="modal" data-bs-target="#helpModal">
+                    <i class="fas fa-question-circle"></i> Help
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Configuration -->
+            <div class="col-lg-4">
+                <div class="card mb-4 fade-in">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-cog"></i> Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="configForm">
+                            <div class="mb-3">
+                                <label class="form-label">API Key</label>
+                                <input type="password" class="form-control" id="apiKey" required>
+                                <div class="form-text">Your Aster Dex API key</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Secret Key</label>
+                                <input type="password" class="form-control" id="secretKey" required>
+                                <div class="form-text">Your Aster Dex secret key</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Maximum Margin per Trade (%)</label>
+                                <select class="form-select" id="maxMargin">
+                                    <option value="10">10%</option>
+                                    <option value="20">20%</option>
+                                    <option value="30" selected>30%</option>
+                                    <option value="40">40%</option>
+                                    <option value="50">50%</option>
+                                </select>
+                                <div class="form-text">Maximum of total margin to use per operation</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Default Take Profit (%)</label>
+                                <input type="number" class="form-control" id="takeProfit" value="0.8" step="0.1" min="0.1" max="5.0">
+                                <div class="form-text">Minimum profit to close position</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Default Stop Loss (%)</label>
+                                <input type="number" class="form-control" id="stopLoss" value="2.0" step="0.1" min="0.5" max="10.0">
+                                <div class="form-text">Maximum loss before stop</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-save"></i> Save Configuration
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Bot Control -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-play-circle"></i> Bot Control</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button id="startBtn" class="btn btn-start btn-lg" disabled>
+                                <i class="fas fa-play"></i> Start Bot
+                            </button>
+                            <button id="stopBtn" class="btn btn-stop btn-lg" disabled>
+                                <i class="fas fa-stop"></i> Stop Bot
+                            </button>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Configure your credentials before starting
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Dashboard -->
+            <div class="col-lg-8">
+                <div class="row">
+                    <!-- Status Cards -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card real-time-card fade-in">
+                            <div class="card-body text-center">
+                                <h6 class="card-title text-muted">Active Positions</h6>
+                                <h3 id="activePositions" class="text-primary">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card real-time-card fade-in">
+                            <div class="card-body text-center">
+                                <h6 class="card-title text-muted">Margin Used</h6>
+                                <h3 id="marginUsage" class="text-warning">0.0%</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card real-time-card fade-in">
+                            <div class="card-body text-center">
+                                <h6 class="card-title text-muted">Total P&L</h6>
+                                <h3 id="totalPnl" class="text-muted">+$0.0000</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card real-time-card fade-in">
+                            <div class="card-body text-center">
+                                <h6 class="card-title text-muted">Uptime</h6>
+                                <h3 id="uptime" class="text-info">00:00:00</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-Time Logs -->
+                <div class="card fade-in">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-terminal"></i> System Logs</h5>
+                        <button id="clearLogs" class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="logContainer" class="log-container">
+                            <div class="log-entry log-info">[INFO] System started. Waiting for configuration...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-question-circle"></i> How to Use AsterBot</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-key text-warning"></i> Initial Configuration</h6>
+                            <ol>
+                                <li><strong>API Key</strong>: Enter your Aster Dex public key</li>
+                                <li><strong>Secret Key</strong>: Enter your Aster Dex secret key</li>
+                                <li><strong>Margin</strong>: Choose the maximum % per trade (10-50%)</li>
+                                <li><strong>TP/SL</strong>: Configure default profit and loss</li>
+                                <li>Click <span class="badge bg-primary">Save Configuration</span></li>
+                            </ol>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-play text-success"></i> Operation</h6>
+                            <ol>
+                                <li>Click <span class="badge bg-success">Start Bot</span></li>
+                                <li>Monitor the real-time dashboard</li>
+                                <li>Monitor activity logs</li>
+                                <li>To stop, click <span class="badge bg-danger">Stop Bot</span></li>
+                            </ol>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-chart-line text-info"></i> Features</h6>
+                            <ul>
+                                <li>Automatic 10x leverage</li>
+                                <li>6 trading pairs (BTC, ETH, SOL, BNB, XRP, DOGE)</li>
+                                <li>High-frequency scalping</li>
+                                <li>Intelligent risk management</li>
+                                <li>Exchange synchronization</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exclamation-triangle text-warning"></i> Important</h6>
+                            <ul>
+                                <li><strong>Only use capital you can afford to lose</strong></li>
+                                <li>Test with small amounts first</li>
+                                <li>Monitor regularly</li>
+                                <li>Keep your keys secure</li>
+                                <li>Trading involves risks</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal (first time) -->
+    {% if first_time %}
+    <div class="modal fade" id="welcomeModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-rocket"></i> Welcome to AsterBot!</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-robot fa-3x text-success mb-3"></i>
+                        <h4>Your trading bot is ready!</h4>
+                        <p class="lead">Follow these simple steps to get started:</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">
+                                        <i class="fas fa-key"></i> 1. Configure your Keys
+                                    </h5>
+                                    <p class="card-text">
+                                        You will need your Aster Dex keys:
+                                        <br><strong>• API Key</strong> (public key)
+                                        <br><strong>• Secret Key</strong> (secret key)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">
+                                        <i class="fas fa-cog"></i> 2. Adjust Risk
+                                    </h5>
+                                    <p class="card-text">
+                                        Configure your strategy:
+                                        <br><strong>• Margin per trade</strong> (10-50%)
+                                        <br><strong>• Take Profit</strong> (default: 0.8%)
+                                        <br><strong>• Stop Loss</strong> (default: 2.0%)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-4">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Important Reminder:</strong>
+                        Automated trading involves risks. Always start with small amounts to test!
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-lg" data-bs-dismiss="modal">
+                        <i class="fas fa-rocket"></i> Let's Get Started!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        // Inicializar Socket.IO
+        const socket = io();
+
+        let configSaved = false;
+        let botRunning = false;
+        let startTime = null;
+
+        // Elementos DOM
+        const configForm = document.getElementById('configForm');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const logContainer = document.getElementById('logContainer');
+
+        // Event Listeners
+        configForm.addEventListener('submit', handleConfigSubmit);
+        startBtn.addEventListener('click', startBot);
+        stopBtn.addEventListener('click', stopBot);
+        document.getElementById('clearLogs').addEventListener('click', clearLogs);
+
+        // Socket Events
+        socket.on('connected', (data) => {
+            addLog('info', data.message);
+        });
+
+        socket.on('bot_status', (data) => {
+            updateBotStatus(data.status === 'running');
+        });
+
+        socket.on('real_time_update', (data) => {
+            updateDashboard(data);
+        });
+
+        socket.on('bot_error', (data) => {
+            addLog('error', `Bot error: ${data.error}`);
+            updateBotStatus(false);
+        });
+
+        socket.on('trading_log', (data) => {
+            const symbolInfo = data.symbol ? ` [${data.symbol}]` : '';
+            addLog(data.level, `${data.message}${symbolInfo}`);
+        });
+
+        // Funções
+        async function handleConfigSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="loading-spinner"></div>Salvando...';
+            submitBtn.disabled = true;
+
+            const config = {
+                api_key: document.getElementById('apiKey').value,
+                secret_key: document.getElementById('secretKey').value,
+                max_margin_per_trade: parseFloat(document.getElementById('maxMargin').value),
+                take_profit_pct: parseFloat(document.getElementById('takeProfit').value),
+                stop_loss_pct: parseFloat(document.getElementById('stopLoss').value)
+            };
+
+            try {
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    configSaved = true;
+                    startBtn.disabled = false;
+                    addLog('success', 'Configuration saved successfully!');
+
+                    // Mascarar as chaves
+                    document.getElementById('apiKey').value = '***';
+                    document.getElementById('secretKey').value = '***';
+
+                    // Feedback visual
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Salvo!';
+                    submitBtn.style.background = 'linear-gradient(135deg, var(--success-green), #22c55e)';
+
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.style.background = '';
+                        submitBtn.disabled = false;
+                    }, 2000);
+                } else {
+                    addLog('error', result.error);
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                addLog('error', `Error saving configuration: ${error.message}`);
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function startBot() {
+            if (!configSaved) {
+                addLog('warning', 'Configure credentials first!');
+                return;
+            }
+
+            // Adicionar spinner de carregamento
+            const originalText = startBtn.innerHTML;
+            startBtn.innerHTML = '<div class="loading-spinner"></div>Starting...';
+            startBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/bot/start', { method: 'POST' });
+                const result = await response.json();
+
+                if (response.ok) {
+                    addLog('success', 'Bot started successfully!');
+                    startTime = new Date();
+                } else {
+                    addLog('error', result.error);
+                }
+            } catch (error) {
+                addLog('error', `Error starting bot: ${error.message}`);
+            } finally {
+                startBtn.innerHTML = originalText;
+            }
+        }
+
+        async function stopBot() {
+            // Adicionar spinner de carregamento
+            const originalText = stopBtn.innerHTML;
+            stopBtn.innerHTML = '<div class="loading-spinner"></div>Stopping...';
+            stopBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/bot/stop', { method: 'POST' });
+                const result = await response.json();
+
+                if (response.ok) {
+                    addLog('info', 'Bot stopped successfully!');
+                    startTime = null;
+                } else {
+                    addLog('error', result.error);
+                }
+            } catch (error) {
+                addLog('error', `Error stopping bot: ${error.message}`);
+            } finally {
+                stopBtn.innerHTML = originalText;
+            }
+        }
+
+        function updateBotStatus(running) {
+            botRunning = running;
+
+            if (running) {
+                statusIndicator.className = 'status-indicator status-running';
+                statusText.textContent = 'Running';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                configForm.style.pointerEvents = 'none';
+                configForm.style.opacity = '0.6';
+            } else {
+                statusIndicator.className = 'status-indicator status-stopped';
+                statusText.textContent = 'Stopped';
+                startBtn.disabled = !configSaved;
+                stopBtn.disabled = true;
+                configForm.style.pointerEvents = 'auto';
+                configForm.style.opacity = '1';
+            }
+        }
+
+        function updateDashboard(data) {
+            // Função auxiliar para animar mudanças de valor
+            function animateValueChange(element, newValue) {
+                element.style.transform = 'scale(1.1)';
+                element.style.transition = 'transform 0.2s ease';
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 200);
+            }
+
+            // Garantir que data é um objeto válido
+            data = data || {};
+
+            // Atualizar posições ativas
+            const activePositionsEl = document.getElementById('activePositions');
+            const newActivePositions = data.active_positions || 0;
+            if (activePositionsEl.textContent !== newActivePositions.toString()) {
+                activePositionsEl.textContent = newActivePositions;
+                animateValueChange(activePositionsEl);
+            }
+
+            // Atualizar margem usada (usar porcentagem se disponível, senão calcular)
+            const marginPercentage = data.margin_usage_percentage || 0;
+            const marginEl = document.getElementById('marginUsage');
+            const newMarginText = `${marginPercentage.toFixed(1)}%`;
+            if (marginEl.textContent !== newMarginText) {
+                marginEl.textContent = newMarginText;
+                animateValueChange(marginEl);
+            }
+
+            // Atualizar PnL total com formatação adequada
+            const totalPnl = data.total_profit || 0;
+            const pnlElement = document.getElementById('totalPnl');
+            const newPnlText = totalPnl >= 0 ? `+$${totalPnl.toFixed(4)}` : `-$${Math.abs(totalPnl).toFixed(4)}`;
+            if (pnlElement.textContent !== newPnlText) {
+                pnlElement.textContent = newPnlText;
+                animateValueChange(pnlElement);
+            }
+
+            // Colorir PnL baseado no valor
+            if (totalPnl > 0) {
+                pnlElement.className = 'text-success';
+            } else if (totalPnl < 0) {
+                pnlElement.className = 'text-danger';
+            } else {
+                pnlElement.className = 'text-muted';
+            }
+
+            // Atualizar uptime
+            if (startTime && data.running !== false) {
+                const elapsed = new Date() - startTime;
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('uptime').textContent =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else if (!startTime || data.running === false) {
+                document.getElementById('uptime').textContent = '00:00:00';
+            }
+        }
+
+        function addLog(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+
+            // Adicionar animação de entrada
+            logEntry.style.opacity = '0';
+            logEntry.style.transform = 'translateX(-20px)';
+
+            logContainer.appendChild(logEntry);
+
+            // Animar entrada
+            requestAnimationFrame(() => {
+                logEntry.style.transition = 'all 0.3s ease';
+                logEntry.style.opacity = '1';
+                logEntry.style.transform = 'translateX(0)';
+            });
+
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Limitar número de logs (manter apenas os últimos 100)
+            const logs = logContainer.children;
+            if (logs.length > 100) {
+                logContainer.removeChild(logs[0]);
+            }
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '<div class="log-entry log-info">[INFO] Logs cleared.</div>';
+        }
+
+        // Atualizar uptime a cada segundo
+        setInterval(() => {
+            if (startTime) {
+                const elapsed = new Date() - startTime;
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                document.getElementById('uptime').textContent =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+
+        // Função para buscar status da API REST
+        async function fetchBotStatus() {
+            try {
+                const response = await fetch('/api/bot/status');
+                if (response.ok) {
+                    const status = await response.json();
+                    updateDashboard(status);
+                    updateBotStatus(status.running);
+                }
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
+        }
+
+        // Buscar status inicial e configurar polling
+        fetchBotStatus();
+        setInterval(fetchBotStatus, 3000); // Atualizar a cada 3 segundos
+
+        // Log inicial
+        addLog('info', 'Dashboard loaded. Active Positions, Margin Used and Total PnL displays ready.');
+
+        // Inicializar status
+        updateBotStatus(false);
+
+        // Mostrar modal de boas-vindas na primeira vez
+        {% if first_time %}
+        window.addEventListener('load', function() {
+            const welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            welcomeModal.show();
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
