@@ -4,20 +4,24 @@
 
 ## 🚀 Super Simple Installation
 
+⚠️ **IMPORTANTE**: Use o arquivo `INSTALL.bat`, não o `install.py`!
+
 ### For Windows (Double Click)
 1. **Download the project** from GitHub
-2. **Double click `1-INSTALL.bat`** ⭐ - Installs everything automatically
-3. **Double click `2-START_ASTERBOT.bat`** - Opens the interface
+2. **Double click `INSTALL.bat`** ⭐ - Installs everything automatically
+3. **Double click `START_ASTERBOT.bat`** - Opens the interface
 4. **Access** `http://localhost:5000` in your browser
+
+> 💡 **Tip**: If you click on `install.py` it only opens the code. Always use `INSTALL.bat`!
 
 ### Manual Installation (Optional)
 ```bash
 # 1. Clone repository
-git clone https://github.com/0xVoltage/AsterBot.git
+git clone https://github.com/seu-usuario/AsterBot.git
 cd AsterBot
 
 # 2. Install dependencies
-pip install -r requirements.txt
+pip install -r requirements_web.txt
 
 # 3. Start interface
 python run_web.py
@@ -26,15 +30,16 @@ python run_web.py
 ## 📱 How to Use
 
 ### 1️⃣ First Setup
-1. Open `1-INSTALL.bat` and press ENTER to install the bot's dependencies
-2. Open `2-START_ASTERBOT.bat` and wait for it to open the bot's webpage for configuration
-3. Create your API keys from https://www.asterdex.com/en/api-management and add them to the bot's webpage
-4. Configure the bot by clicking Save and then Start Bot
+- Open `http://localhost:5000`
+- Enter your **Aster Dex keys**
+- Configure **margin per trade** (10-50%)
+- Adjust **Take Profit** and **Stop Loss**
+- Click **"Save Configuration""
 
 ### 2️⃣ Start Trading
 - Click **"Start Bot"**
 - Follow the **real-time dashboard**
-- Monitor the **activity logs**
+- Monitor the **activity logs"
 
 ### 3️⃣ Stop Bot
 - Click **"Stop Bot"** when you want to stop
@@ -72,15 +77,14 @@ python run_web.py
 - Keep your API keys secure
 - Don't leave running unsupervised for long periods
 
-This bot is in development; monitoring its operations is recommended for security reasons.
-
 ## 📂 File Structure
 
 ```
 AsterBot/
-├── 📄 2-START_ASTERBOT.bat    ← CLICK HERE TO START
-├── 🔧 1-INSTALL.bat           ← CLICK HERE TO INSTALL (first time)
+├── 📄 START_ASTERBOT.bat    ← CLICK HERE TO START
+├── 🔧 INSTALL.bat            ← CLICK HERE TO INSTALL (first time)
 ├── 📖 README.md               ← This file
+├── 📋 HOW_TO_USE.txt           ← Super simple instructions
 ├── 🌐 run_web.py              ← Web interface
 ├── ⚙️ config/                 ← Configurations
 ├── 🧠 src/                    ← Bot code
@@ -107,6 +111,7 @@ AsterBot/
 ## 🔧 Technical Support
 
 - 📋 Check the **logs in the web interface**
+- 📖 Read the **complete documentation** in `WEB_README.md`
 - 🐛 Report bugs on **GitHub Issues**
 
 ## 📊 Bot Statistics
@@ -122,8 +127,8 @@ AsterBot/
 
 ## 🎉 Ready to Start!
 
-1. **Click `1-INSTALL.bat`** (first time only)
-2. **Click `2-START_ASTERBOT.bat`**
+1. **Click `INSTALL.bat`** (first time only)
+2. **Click `START_ASTERBOT.bat`**
 3. **Configure and start** at `http://localhost:5000`
 
 **Happy Trading! 🚀**
