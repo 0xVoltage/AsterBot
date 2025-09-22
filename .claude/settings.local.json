@@ -18,7 +18,8 @@
       "Bash(gh --version)",
       "Bash(git commit:*)",
       "Bash(cmdkey:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(git remote:*)"
     ],
     "deny": [],
     "ask": []
