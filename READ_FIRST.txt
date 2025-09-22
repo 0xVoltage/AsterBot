@@ -1,0 +1,56 @@
+=========================================
+🤖 ASTERBOT - READ FIRST!
+=========================================
+
+⚠️ WARNING: DON'T CLICK ON install.py!
+
+👉 TO INSTALL:
+   Double click on "INSTALL.bat"
+   (not on install.py)
+
+👉 TO USE:
+   Double click on "START_ASTERBOT.bat"
+
+=========================================
+
+🔍 WHY DOESN'T install.py WORK?
+
+On Windows, double clicking a .py file only
+opens the code, it doesn't run the program.
+
+That's why we created the INSTALL.bat file that
+runs the installer correctly.
+
+=========================================
+
+📋 CORRECT ORDER:
+
+1️⃣ FIRST TIME:
+   - Click on "INSTALL.bat"
+   - Wait for complete installation
+
+2️⃣ USE THE BOT:
+   - Click on "START_ASTERBOT.bat"
+   - Open http://localhost:5000
+
+3️⃣ CONFIGURE:
+   - Enter your Aster Dex keys
+   - Configure margin (30% recommended)
+   - Click "Start Bot"
+
+=========================================
+
+✅ IMPORTANT FILES:
+
+INSTALL.bat          ← To install
+START_ASTERBOT.bat  ← To use
+HOW_TO_USE.txt      ← Basic instructions
+README.md           ← Complete manual
+
+=========================================
+
+❓ HAVE QUESTIONS?
+Read the README.md file for complete
+instructions with images and explanations.
+
+=========================================

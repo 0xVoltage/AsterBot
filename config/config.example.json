@@ -1,0 +1,41 @@
+{
+  "api_key": "sua_api_key_aqui",
+  "secret_key": "sua_secret_key_aqui",
+  "base_url": "https://fapi.asterdex.com",
+  "symbol": "BTCUSDT",
+  "cycle_interval": 5,
+  "log_level": "INFO",
+
+  "trading_settings": {
+    "risk_per_trade": 1.0,
+    "min_profit_target": 0.15,
+    "max_position_time": 300,
+    "trading_fee": 0.035,
+    "scalping_mode": true,
+    "min_trade_interval": 30
+  },
+
+  "technical_indicators": {
+    "rsi_period": 14,
+    "sma_short": 5,
+    "sma_long": 10,
+    "rsi_oversold": 30,
+    "rsi_overbought": 70
+  },
+
+  "risk_management": {
+    "max_daily_loss": 50.0,
+    "max_consecutive_losses": 5,
+    "position_size_multiplier": 1.0,
+    "emergency_stop": false
+  },
+
+  "monitoring": {
+    "performance_snapshot_interval": 300,
+    "alert_thresholds": {
+      "min_win_rate": 40,
+      "max_drawdown": 20,
+      "min_profit_factor": 1.0
+    }
+  }
+}

@@ -1,0 +1,36 @@
+=====================================
+     ASTERBOT - HOW TO USE (SIMPLE)
+=====================================
+
+FOR BEGINNERS:
+
+1. INSTALL (FIRST TIME):
+   - Double click on "INSTALL.bat"
+   - Wait until "INSTALLATION COMPLETED" appears
+
+2. OPEN THE BOT:
+   - Double click on "START_ASTERBOT.bat"
+   - Your browser should open automatically
+   - If it doesn't open, go to: http://localhost:5000
+
+3. CONFIGURE:
+   - Enter your Aster Dex keys
+   - Choose margin (recommended: 30%)
+   - Click "Save Configuration"
+
+4. START:
+   - Click "Start Bot"
+   - Monitor the dashboard
+   - To stop, click "Stop Bot"
+
+IMPORTANT:
+- Only use money you can afford to lose
+- Test with small amounts first
+- Always monitor the bot
+
+PROBLEMS?
+- Read the README.md
+- Check if Python is installed
+- Run INSTALL.bat again
+
+=====================================
