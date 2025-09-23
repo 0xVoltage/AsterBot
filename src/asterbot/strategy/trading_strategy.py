@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from ..api.client import AsterDexClient
 from ..api.market_data import MarketDataCollector
 from ..indicators.technical_indicators import TradingSignals, RiskCalculator
+from ..utils.symbol_precision import SymbolPrecisionManager
 
 
 class PositionSide(Enum):
@@ -62,6 +63,9 @@ class VolumeScalpingStrategy:
 
         # Multi-symbol support
         self.available_margin_percentage: Optional[float] = None
+
+        # Symbol precision manager for dynamic step size handling
+        self.precision_manager = SymbolPrecisionManager(client)
 
         # Configurar alavancagem na inicialização
         self._setup_leverage()
@@ -231,9 +235,8 @@ class VolumeScalpingStrategy:
             self.logger.warning(f"Required margin ({final_margin_needed:.2f}) exceeds balance ({balance:.2f})")
             return 0
 
-        # 7. Round to exchange step size (0.001) - ALWAYS DOWN to respect limit
-        step_size = 0.001
-        final_quantity = int(final_quantity / step_size) * step_size  # Round down
+        # 7. Round to exchange step size - ALWAYS DOWN to respect limit
+        final_quantity = self.precision_manager.round_quantity(self.config.symbol, final_quantity)
 
         self.logger.info(f"Calculated position: "
                         f"balance={balance:.2f} USDT, "
@@ -361,9 +364,13 @@ class VolumeScalpingStrategy:
                 return False
 
             # Execute market order for fast entry
-            # Round quantity to step size (0.001)
-            step_size = 0.001
-            rounded_quantity = round(quantity / step_size) * step_size
+            # Round quantity to symbol's step size
+            rounded_quantity = self.precision_manager.round_quantity(self.config.symbol, quantity)
+
+            # Validate order meets exchange requirements
+            if not self.precision_manager.validate_order_size(self.config.symbol, rounded_quantity, entry_price):
+                self.logger.warning(f"Order validation failed for {self.config.symbol} {rounded_quantity} @ {entry_price}")
+                return False
 
             self.logger.info(f"Trying to open order: {side.value} {rounded_quantity} {self.config.symbol} @ market")
 

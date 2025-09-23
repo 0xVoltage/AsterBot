@@ -19,7 +19,9 @@
       "Bash(git commit:*)",
       "Bash(cmdkey:*)",
       "Bash(findstr:*)",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []
